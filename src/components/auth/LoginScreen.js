@@ -1,21 +1,43 @@
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {useForm} from "../../hooks/useForm";
+import {login} from "../../actions/auth";
 
 export const LoginScreen = () => {
+    const dispatch = useDispatch();
+
+    const [formValues, handleInputChange] = useForm({
+        email: 'arian.angoma@tecsup.edu.pe',
+        password: '1234567'
+    });
+
+    const {email, password} = formValues;
+
+    const handleInput = (e) => {
+        e.preventDefault();
+
+        dispatch(login(123, "Arian Angoma"));
+    }
+
     return (
         <>
             <h3 className="auth__title">Login</h3>
 
-            <form>
+            <form onSubmit={handleInput}>
                 <input type="text"
                        placeholder="Email"
                        name="email"
                        className="auth__input"
-                       autoComplete="off"/>
+                       autoComplete="off"
+                       value={email}
+                       onChange={handleInputChange}/>
 
                 <input type="password"
                        placeholder="Password"
                        name="password"
-                       className="auth__input"/>
+                       className="auth__input"
+                       value={password}
+                       onChange={handleInputChange}/>
 
                 <button type="submit"
                         className="btn btn-primary btn-block">
