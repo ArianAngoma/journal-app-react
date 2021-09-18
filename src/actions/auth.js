@@ -1,19 +1,32 @@
 import {types} from "../types/types";
-import {getAuth, signInWithPopup, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import {
+    getAuth,
+    signInWithPopup,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    signInWithEmailAndPassword
+} from 'firebase/auth';
 import {googleAuthProvider} from "../firebase/firebase-config";
 
 export const startLoginEmailPassword = (email, password) => {
     return (dispatch) => {
-        setTimeout(() => {
-            dispatch(login(123, 'Pedro'))
-        }, 3500)
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, password).then(({user}) => {
+            console.log(user);
+
+            dispatch(
+                login(user.uid, user.displayName)
+            )
+        }).catch(e => {
+            console.error(e);
+        })
     }
 }
 
 export const startRegisterWithEmailPasswordName = (email, password, name) => {
     return (dispatch) => {
         const auth = getAuth();
-        createUserWithEmailAndPassword(auth, email, password).then(async (user) => {
+        createUserWithEmailAndPassword(auth, email, password).then(async ({user}) => {
             await updateProfile(auth.currentUser, {displayName: name})
             console.log(user);
             dispatch(
