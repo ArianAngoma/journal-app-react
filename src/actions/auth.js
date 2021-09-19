@@ -7,9 +7,14 @@ import {
     signInWithEmailAndPassword
 } from 'firebase/auth';
 import {googleAuthProvider} from "../firebase/firebase-config";
+import {uiFinishLoading, uiStartLoading} from "./ui";
 
 export const startLoginEmailPassword = (email, password) => {
     return (dispatch) => {
+        dispatch(
+            uiStartLoading()
+        )
+
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password).then(({user}) => {
             console.log(user);
@@ -17,8 +22,16 @@ export const startLoginEmailPassword = (email, password) => {
             dispatch(
                 login(user.uid, user.displayName)
             )
+
+            dispatch(
+                uiFinishLoading()
+            )
         }).catch(e => {
             console.error(e);
+
+            dispatch(
+                uiFinishLoading()
+            )
         })
     }
 }
