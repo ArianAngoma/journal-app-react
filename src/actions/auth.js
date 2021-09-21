@@ -7,6 +7,7 @@ import {
     signInWithEmailAndPassword,
     signOut
 } from 'firebase/auth';
+import Swal from 'sweetalert2'
 import {googleAuthProvider} from "../firebase/firebase-config";
 import {uiFinishLoading, uiStartLoading} from "./ui";
 
@@ -33,6 +34,8 @@ export const startLoginEmailPassword = (email, password) => {
             dispatch(
                 uiFinishLoading()
             )
+
+            Swal.fire('Error', e.message, 'error');
         })
     }
 }
@@ -48,6 +51,7 @@ export const startRegisterWithEmailPasswordName = (email, password, name) => {
             );
         }).catch(e => {
             console.error(e);
+            Swal.fire('Error', e.message, 'error');
         })
     }
 }
