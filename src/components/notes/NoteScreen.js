@@ -1,6 +1,14 @@
 import {NoteAppBar} from "./NoteAppBar";
+import {useSelector} from "react-redux";
+import {useForm} from "../../hooks/useForm";
 
 export const NoteScreen = () => {
+    const {active: note} = useSelector(state => state.notes);
+
+    const [formValues, handleInputChange] = useForm(note);
+    console.log(formValues);
+    const {body, title} = formValues;
+
     return (
         <div className="notes__main-content">
             <NoteAppBar/>
@@ -9,14 +17,22 @@ export const NoteScreen = () => {
                 <input type="text"
                        placeholder="Some awesome title"
                        className="notes__title-input"
-                       autoComplete="off"/>
+                       autoComplete="off"
+                       value={title}
+                       onChange={handleInputChange}/>
 
                 <textarea placeholder="What happened today"
-                          className="notes__textarea"/>
+                          className="notes__textarea"
+                          value={body}
+                          onChange={handleInputChange}/>
 
-                <div className="notes__image">
-                    <img src="https://www.arsys.es/blog/file/uploads/2017/04/NodeJS.jpg" alt="img"/>
-                </div>
+                {
+                    (note.url) && (
+                        <div className="notes__image">
+                            <img src="https://www.arsys.es/blog/file/uploads/2017/04/NodeJS.jpg" alt="img"/>
+                        </div>
+                    )
+                }
             </div>
 
 
