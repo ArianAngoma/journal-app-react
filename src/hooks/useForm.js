@@ -4,8 +4,8 @@ export const useForm = (initialState = {}) => {
     const [values, setValues] = useState(initialState);
 
     // Funcion para limpiar el formulario
-    const reset = () => {
-        setValues(initialState)
+    const reset = (newFormState = initialState) => {
+        setValues(newFormState)
     }
 
     const handleInputChange = ({target}) => {
