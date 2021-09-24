@@ -13,10 +13,17 @@ export const NoteScreen = () => {
     const {body, title} = formValues;
 
     const activeId = useRef(note.id);
+    const activeUrl = useRef(note.url);
+
     useEffect(() => {
         if (note.id !== activeId.current) {
             reset(note);
             activeId.current = note.id;
+        }
+
+        if (note.url !== activeUrl.current) {
+            reset(note);
+            activeUrl.current = note.url;
         }
     }, [note, reset]);
 
@@ -46,7 +53,7 @@ export const NoteScreen = () => {
                 {
                     (note.url) && (
                         <div className="notes__image">
-                            <img src="https://www.arsys.es/blog/file/uploads/2017/04/NodeJS.jpg" alt="img"/>
+                            <img src={note.url} alt="imageNote" style={{width: 200}}/>
                         </div>
                     )
                 }
