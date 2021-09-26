@@ -1,20 +1,32 @@
+/**
+
+ * @jest-environment node
+
+ */
+
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {deleteDoc, disableNetwork, doc} from "firebase/firestore";
-import {startNewNote} from "../../actions/notes";
+import {collection, deleteDoc, disableNetwork, doc, getDoc} from "firebase/firestore";
+import {startLoadingNotes, startNewNote, startSaveNote} from "../../actions/notes";
 import {db} from "../../firebase/firebase-config";
 import {types} from "../../types/types";
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const store = mockStore({
+const initState = {
     auth: {
         uid: '123'
     }
-});
+}
+
+let store = mockStore(initState);
 
 describe('Pruebas en notes-action', () => {
+    beforeEach(() => {
+        store = mockStore(initState)
+    });
+
     afterAll(() => {
         disableNetwork(db);
     });
@@ -47,5 +59,46 @@ describe('Pruebas en notes-action', () => {
 
         const docId = actions[0].payload.id;
         await deleteDoc(doc(db, `/123/journal/notes/${docId}`));
+    });
+
+    test('startLoadingNotes debe cargar las notas', async () => {
+        await store.dispatch(startLoadingNotes('123'));
+
+        const actions = store.getActions();
+        //console.log(actions);
+
+        expect(actions[0]).toEqual({
+            type: types.notesLoad,
+            payload: expect.any(Array)
+        });
+
+        const expected = {
+            id: expect.any(String),
+            title: expect.any(String),
+            body: expect.any(String),
+            date: expect.any(Number)
+        };
+
+        expect(actions[0].payload[0]).toMatchObject(expected);
+    });
+
+    test('startSaveNote debe de actualziar la nota', async () => {
+        const note = {
+            id: '779IeMUcHWpcsU3HKIUK',
+            title: 'title',
+            body: 'body'
+        };
+
+        await store.dispatch(startSaveNote(note));
+
+        const actions = store.getActions();
+        // console.log(actions);
+
+        expect(actions[0].type).toBe(types.notesUpdated);
+
+        const docRef = await getDoc(doc(db, `/123/journal/notes/${note.id}`));
+        // console.log(docRef.data());
+
+        expect(docRef.data().title).toBe(note.title);
     });
 });
