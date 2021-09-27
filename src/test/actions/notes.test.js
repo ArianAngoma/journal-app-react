@@ -6,7 +6,7 @@
 
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {collection, deleteDoc, disableNetwork, doc, getDoc} from "firebase/firestore";
+import {deleteDoc, disableNetwork, doc, getDoc} from "firebase/firestore";
 import {startLoadingNotes, startNewNote, startSaveNote, startUploading} from "../../actions/notes";
 import {db} from "../../firebase/firebase-config";
 import {types} from "../../types/types";

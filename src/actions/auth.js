@@ -19,8 +19,8 @@ export const startLoginEmailPassword = (email, password) => {
         )
 
         const auth = getAuth();
-        signInWithEmailAndPassword(auth, email, password).then(({user}) => {
-            console.log(user);
+        return signInWithEmailAndPassword(auth, email, password).then(({user}) => {
+            // console.log(user);
 
             dispatch(
                 login(user.uid, user.displayName)
