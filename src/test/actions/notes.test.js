@@ -10,6 +10,14 @@ import {collection, deleteDoc, disableNetwork, doc, getDoc} from "firebase/fires
 import {startLoadingNotes, startNewNote, startSaveNote, startUploading} from "../../actions/notes";
 import {db} from "../../firebase/firebase-config";
 import {types} from "../../types/types";
+import {fileUpload} from "../../helpers/fileUpload";
+
+jest.mock('../../helpers/fileUpload', () => ({
+    fileUpload: () => {
+        //return 'https://hola-mundo.com/cosa.jpg';
+        return Promise.resolve('https://hola-mundo.com/cosa.jpg');
+    }
+}));
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -17,6 +25,13 @@ const mockStore = configureStore(middlewares);
 const initState = {
     auth: {
         uid: '123'
+    },
+    notes: {
+        active: {
+            id: '779IeMUcHWpcsU3HKIUK',
+            title: 'Hola',
+            body: 'Mundo'
+        }
     }
 }
 
@@ -103,7 +118,11 @@ describe('Pruebas en notes-action', () => {
     });
 
     test('startUploading debe de actualizar el url del entry', async () => {
-        const file = new File([], 'photo.jpg');
+        const file = [];
         await store.dispatch(startUploading(file));
+
+        const docRef = await getDoc(doc(db, `/123/journal/notes/779IeMUcHWpcsU3HKIUK`));
+
+        expect(docRef.data().url).toBe('https://hola-mundo.com/cosa.jpg');
     });
 });
