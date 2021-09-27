@@ -7,7 +7,7 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {collection, deleteDoc, disableNetwork, doc, getDoc} from "firebase/firestore";
-import {startLoadingNotes, startNewNote, startSaveNote} from "../../actions/notes";
+import {startLoadingNotes, startNewNote, startSaveNote, startUploading} from "../../actions/notes";
 import {db} from "../../firebase/firebase-config";
 import {types} from "../../types/types";
 
@@ -100,5 +100,10 @@ describe('Pruebas en notes-action', () => {
         // console.log(docRef.data());
 
         expect(docRef.data().title).toBe(note.title);
+    });
+
+    test('startUploading debe de actualizar el url del entry', async () => {
+        const file = new File([], 'photo.jpg');
+        await store.dispatch(startUploading(file));
     });
 });
